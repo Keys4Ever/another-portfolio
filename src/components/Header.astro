@@ -1,0 +1,100 @@
+---
+import meguminImage from "../assets/img/gunnm-float-v2.png";
+---
+
+<header
+	class="relative w-full min-h-[200px] md:min-h-[400px] overflow-hidden hidden md:block"
+	id="about"
+>
+	<div>
+		<div
+			class="absolute top-[50px] left-1/2 pointer-events-none header-fade-in"
+		>
+			<img
+				src={meguminImage.src}
+				alt=""
+				class="header-img"
+				draggable="false"
+			/>
+		</div>
+
+		<div
+			class="relative flex flex-col items-center pt-[350px] md:pt-[610px] header-fade-in"
+		>
+			<a
+				href="/"
+				class="relative z-10 block cursor-pointer group no-underline focus:outline-none"
+				aria-label="Home"
+			>
+				<pre
+					class="text-[15px] leading-none text-[#f8edff] text-center ascii-text transition-colors duration-300 group-hover:text-[#d16c8a]">
+
+			.g8"""bgd                                       `7MM               
+		  .dP'     `M                                         MM               
+		  dM'       `   ,pW"Wq.`7MMpMMMb.  M"""MMV  ,6"Yb.    MM  ,pW"Wq.      
+		  MM           6W'   `Wb MM    MM  '  AMV  8)   MM    MM 6W'   `Wb     
+		  MM.    `7MMF'8M     M8 MM    MM    AMV    ,pm9MM    MM 8M     M8     
+		  `Mb.     MM  YA.   ,A9 MM    MM   AMV  , 8M   MM    MM YA.   ,A9     
+			`"bmmmdPY   `Ybmd9' JMML  JMML AMMmmmM `Moo9^Yo  JMML `Ybmd9'      
+		        						 ,,        ,,    ,,    ,,                      
+		        	.g8"""bgd           *MM        db  `7MM  `7MM                      
+		          .dP'     `M            MM              MM    MM                      
+		          dM'       ``7MM  `7MM  MM,dMMb.`7MM    MM    MM   ,6"Yb.             
+		          MM           MM    MM  MM    `Mb MM    MM    MM  8)   MM             
+		          MM.          MM    MM  MM     M8 MM    MM    MM   ,pm9MM             
+		          `Mb.     ,'  MM    MM  MM.   ,M9 MM    MM    MM  8M   MM             
+		        	`"bmmmd'   `Mbod"YML P^YbmdP' JMML  JMML  JMML `Moo9^Yo.           
+				</pre>
+			</a>
+		</div>
+	</div>
+</header>
+
+<style>
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(100px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes fragmentFloat {
+		0%,
+		100% {
+			transform: translateX(-50%) translate(0, 0) rotate(0deg);
+		}
+		50% {
+			transform: translateX(-50%) translate(5px, -5px) rotate(0.5deg);
+		}
+	}
+
+	.header-fade-in {
+		animation: fadeInUp 1s ease-out forwards;
+		opacity: 0;
+	}
+
+	.ascii-text {
+		text-shadow:
+			0 0 10px rgba(0, 0, 0, 0.8),
+			0 0 20px rgba(0, 0, 0, 0.6),
+			0 2px 4px rgba(0, 0, 0, 0.9),
+			0 4px 8px rgba(0, 0, 0, 0.7);
+	}
+
+	.header-img {
+		width: 90%;
+		max-width: 750px; /* Mobile default */
+		transform: translateX(-50%);
+		transform-origin: center;
+
+		animation: fragmentFloat 5s infinite ease-in-out;
+
+		pointer-events: none;
+		user-select: none;
+	}
+
+</style>

@@ -1,0 +1,70 @@
+---
+const {
+    title,
+    version,
+    date,
+    description,
+    features,
+    technologies = [],
+    link,
+    linkText = "View project",
+} = Astro.props;
+---
+
+<div
+    class="relative overflow-hidden border border-zinc-700 bg-zinc-950 text-zinc-200 font-mono"
+>
+    <div
+        class="pointer-events-none absolute inset-0 opacity-[0.08] bg-[linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:100%_3px]"
+    >
+    </div>
+
+    {
+        title && (
+            <div class="border-b border-zinc-700 bg-zinc-900 px-4 py-2 text-xs uppercase tracking-widest text-zinc-400">
+                &gt; {title}
+            </div>
+        )
+    }
+
+    <div class="relative px-4 py-4 text-sm leading-relaxed space-y-4">
+        <div class="flex gap-4 text-xs text-zinc-500">
+            {version && <span class="text-primary">{version}</span>}
+            <span>{date}</span>
+        </div>
+
+        <p class="text-zinc-300">{description}</p>
+
+        <div class="space-y-1 text-xs text-zinc-400">
+            {
+                features.map((feature: string) => (
+                    <div class="flex gap-2">
+                        <span class="text-primary">&gt;</span>
+                        <span>{feature}</span>
+                    </div>
+                ))
+            }
+        </div>
+
+        {
+            technologies.length > 0 && (
+                <div class="flex flex-wrap gap-2 pt-2">
+                    {technologies.map((tech: string) => (
+                        <div class="px-2 py-0.5 text-[10px] text-zinc-400 border border-zinc-800 bg-zinc-900/50">
+                            {tech}
+                        </div>
+                    ))}
+                </div>
+            )
+        }
+
+        <div class="pt-2">
+            <a
+                href={link}
+                class="text-xs text-zinc-500 hover:text-primary transition-colors duration-300"
+            >
+                [{linkText}]
+            </a>
+        </div>
+    </div>
+</div>

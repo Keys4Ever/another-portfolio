@@ -1,0 +1,58 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer id="contact" class="relative py-16" id="contact">
+    <div>
+        <!-- Contact section -->
+        <div class="mb-12 text-center">
+            <div class="text-xs text-muted-foreground mb-4">
+                // CONTACT ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            </div>
+
+            <div class="space-y-2 text-sm">
+                <p class="text-foreground/70">
+                    &gt; Feel free to reach out for collaborations or just to
+                    say hi.
+                </p>
+                <a
+                    href="mailto:cubillagonzalo@outlook.com"
+                    class="inline-block text-primary hover:underline transition-all duration-300"
+                >
+                    [cubillagonzalo@outlook.com]
+                </a>
+            </div>
+        </div>
+
+        <!-- Social links -->
+        <nav class="flex justify-center gap-6 text-xs text-foreground/50 mb-12">
+            <a
+                href="https://github.com/Keys4Ever"
+                class="hover:text-primary transition-colors duration-300"
+                >[GitHub]</a
+            >
+            <a
+                href="https://linkedin.com/in/gonzalo-cubilla"
+                class="hover:text-primary transition-colors duration-300"
+                >[LinkedIn]</a
+            >
+        </nav>
+
+        <!-- ASCII footer -->
+        <div class="text-center">
+            <pre
+                class="text-[8px] md:text-[10px] text-foreground/20 inline-block">
+{`
+░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+░  made with <3 and lots of coffee  ░  2026  ░  GC  ░░░░░░░░
+░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+`}
+      </pre>
+        </div>
+
+        <!-- Copyright -->
+        <p class="text-center text-xs text-muted-foreground mt-8">
+            © {currentYear} Gonzalo Cubilla. All rights reserved.
+        </p>
+    </div>
+</footer>

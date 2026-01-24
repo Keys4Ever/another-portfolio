@@ -1,0 +1,91 @@
+---
+import ProjectCard from "./util/ProjectCard.astro";
+
+const projects = [
+    {
+        title: "Url shortener",
+        version: "v2.0.0",
+        date: "2024.12",
+        description: "A minimal url shortener built with React and TypeScript.",
+        features: [
+            "Url shortening",
+            "Minimal analytics",
+            "Url caching in Redis",
+            "Real-time logs",
+        ],
+        technologies: ["React", "TypeScript", "Redis", "Vite"],
+        link: "https://github.com/keys4ever/urlshortenerv2",
+        linkText: "View code",
+    },
+    {
+        title: "Manga Library",
+        version: "v1.4",
+        date: "2024.06",
+        description:
+            "Stay organized with your favorite mangas! Manga Library is your personal digital manga shelf, allowing you to track, store, and filter the titles and chapters you're following. Never lose track of what you're reading again! .",
+        features: [
+            "Local storage",
+            "Smart filters",
+            "Import and export",
+            "Chrome extension",
+        ],
+        technologies: ["JavaScript", "Chrome API", "HTML/CSS"],
+        link: "https://chromewebstore.google.com/detail/manga-library/agdepjcnhljkjcnnmanbooinhoaieidc",
+        linkText: "View app",
+    },
+    {
+        title: "Grin game",
+        version: "v1.0.0",
+        date: "2025.06",
+        description:
+            "A simple c++ platformer game, built with SFML from scratch.",
+        features: ["Simple saves system"],
+        technologies: ["C++", "SFML"],
+        link: "https://github.com/Alanjaqs/GRIN-UTN-TP",
+        linkText: "View code",
+    },
+    {
+        title: "Impostor bot",
+        date: "2026.01",
+        description: "Personal discord bot, to play 'impostor' party game",
+        features: [
+            "CRUD features for custom words",
+            "Fully functional game flow",
+            "Multiplayer and Local gamemodes",
+        ],
+        technologies: ["Node.js", "Discord.js", "TypeScript"],
+        link: "https://github.com/Keys4Ever/impostor-game-bot-discord",
+        linkText: "View code",
+    },
+];
+---
+
+<section id="portfolio" class="relative py-12" id="portfolio">
+    <div class="mb-16">
+        <div class="border-t border-border"></div>
+        <div class="mt-4 text-xs text-muted-foreground">
+            // PORTFOLIO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        </div>
+    </div>
+
+    <div
+        class="columns-1 md:columns-2 gap-6 md:gap-8 space-y-6 md:space-y-8"
+    >
+        {
+            projects.map((project, index) => (
+                <div
+                    class={`break-inside-avoid mb-6 md:mb-8 fade-in-scroll delay-${(index + 1) * 100}`}
+                >
+                    <ProjectCard {...project} />
+                </div>
+            ))
+        }
+    </div>
+
+    <div class="mt-16">
+        <div class="text-xs text-muted-foreground text-right">
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ EOF //
+        </div>
+        <div class="border-t border-border mt-4"></div>
+    </div>
+</section>

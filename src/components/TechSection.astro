@@ -1,0 +1,54 @@
+---
+import TerminalCard from "./util/TerminalCard.astro";
+
+const technologies = [
+  {
+    name: "Languages",
+    items: ["JavaScript", "TypeScript", "PHP", "Java", "C#", "C++"],
+  },
+  {
+    name: "Frontend Frameworks & Libraries",
+    items: ["React", "Next.js", "AngularJS", "Angular 20", "Tailwind CSS"],
+  },
+  {
+    name: "Backend Frameworks",
+    items: ["Node.js", "Express", "Laravel", "CakePHP"],
+  },
+  {
+    name: "Databases & ORM",
+    items: ["PostgreSQL", "Prisma", "SQLite", "SQL Server"],
+  },
+  {
+    name: "Design",
+    items: ["Figma", "Photoshop", "Illustrator"],
+  },
+  {
+    name: "Tools & DevOps",
+    items: ["Git", "VS Code", "Docker", "Vercel"],
+  },
+];
+---
+
+<section class="py-8">
+  <TerminalCard title="Technologies">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {
+        technologies.map((category) => (
+          <div class="space-y-2">
+            <div class="text-xs uppercase tracking-wider font-ank text-[#d16c8a]">
+              {category.name}
+            </div>
+            <div class="space-y-1">
+              {category.items.map((item) => (
+                <div class="text-zinc-400 text-xs flex gap-2">
+                  <span class="text-zinc-600">&gt;</span>
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </TerminalCard>
+</section>

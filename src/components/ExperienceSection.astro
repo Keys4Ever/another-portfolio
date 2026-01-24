@@ -1,0 +1,78 @@
+---
+import TerminalCard from "./util/TerminalCard.astro";
+
+const workExperience = [
+    {
+        period: "2025 - present",
+        title: "Fullstack Developer",
+        organization: "Nimble Gravity",
+        description:
+            "Maintenance of a vending machine ERP system and development of new features. Integration of payment systems such as Clover, ITD Posnets, and migrations from AngularJS to Angular 20.",
+        isNew: true,
+    },
+];
+
+const education = [
+    {
+        period: "2024 - 2026",
+        title: "Technical degree in programming",
+        organization: "Universidad Tecnológica Nacional (UTN)",
+    },
+];
+---
+
+<section class="py-8">
+    <div class="grid md:grid-cols-2 gap-6">
+        <TerminalCard title="Working experience">
+            <div class="space-y-4">
+                {
+                    workExperience.map((item) => (
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2 text-xs text-zinc-500">
+                                <span>{item.period}</span>
+                                {item.isNew && (
+                                    <span class="text-[10px] bg-primary/20 text-[#d16c8a] px-1.5 py-0.5 rounded">
+                                        new
+                                    </span>
+                                )}
+                            </div>
+                            <div class="text-[#d16c8a] font-ank">
+                                {item.title}
+                            </div>
+                            <div class="text-zinc-400 text-xs">
+                                {item.organization}
+                            </div>
+                            {item.description && (
+                                <div class="text-zinc-500 text-xs font-ank flex gap-2">
+                                    <span class="text-zinc-600">&gt;</span>
+                                    {item.description}
+                                </div>
+                            )}
+                        </div>
+                    ))
+                }
+            </div>
+        </TerminalCard>
+
+        <!-- Education -->
+        <TerminalCard title="Education">
+            <div class="space-y-4">
+                {
+                    education.map((item) => (
+                        <div class="space-y-1">
+                            <div class="text-xs text-zinc-500">
+                                {item.period}
+                            </div>
+                            <div class="text-[#d16c8a] font-ank">
+                                {item.title}
+                            </div>
+                            <div class="text-zinc-400 text-xs font-ank">
+                                {item.organization}
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        </TerminalCard>
+    </div>
+</section>
