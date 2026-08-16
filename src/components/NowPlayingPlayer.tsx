@@ -264,7 +264,7 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
                     />
                 </div>
 
-                <div className="flex items-center gap-3 text-[10px] font-ank uppercase tracking-widest text-zinc-500">
+                <div className="ml-8 flex items-center gap-3 text-[10px] font-ank uppercase tracking-widest text-zinc-500">
                     <span className="w-8">{formatTime(current - clipStart)}</span>
                     <button
                         type="button"
@@ -286,7 +286,7 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
                     </button>
                     <span className="w-8">{formatTime(Math.max(0, clipEnd - clipStart))}</span>
 
-                    <div className="ml-auto flex min-w-0 items-center gap-2">
+                    <div className="flex min-w-0 items-center gap-2">
                         <button
                             type="button"
                             onClick={toggleMute}
