@@ -1,4 +1,5 @@
 import { useThoughtsData } from '../hooks/useThoughtsData';
+import NowPlayingPlayer from './NowPlayingPlayer';
 
 const TerminalCard = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <div className="relative overflow-hidden border border-zinc-700 bg-zinc-950 text-zinc-200 font-mono h-full">
@@ -68,16 +69,7 @@ export default function ThoughtsContainer() {
 
             <TerminalCard title="Listening to">
                 {listening ? (
-                    <div className="space-y-3">
-                        <iframe
-                            src={`https://open.spotify.com/embed/track/${listening.song}?utm_source=generator&theme=0`}
-                            width="100%"
-                            height="152"
-                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                            loading="lazy"
-                            style={{ background: 'transparent', border: 'none' }}
-                        ></iframe>
-                    </div>
+                    <NowPlayingPlayer listening={listening} />
                 ) : (
                     <p className="text-zinc-500 italic">Not listening to anything right now...</p>
                 )}
