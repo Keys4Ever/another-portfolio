@@ -14,16 +14,25 @@ const formatTime = (seconds: number) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
 
+const ratioFromPointer = (event: React.PointerEvent<HTMLElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    return Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+};
+
 export default function NowPlayingPlayer({ listening }: { listening: ListeningData }) {
     const boxRef = useRef<HTMLDivElement>(null);
     const playerRef = useRef<YoutubePlayer | null>(null);
     const trackRef = useRef<HTMLDivElement>(null);
+    const volumeRef = useRef<HTMLDivElement>(null);
+    const volumeValueRef = useRef(80);
     const [playing, setPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
     const [clipStart, setClipStart] = useState(listening.startTime ?? 0);
     const [clipEnd, setClipEnd] = useState(listening.endTime ?? 0);
     const [current, setCurrent] = useState(listening.startTime ?? 0);
     const [title, setTitle] = useState('');
+    const [volume, setVolume] = useState(80);
+    const [muted, setMuted] = useState(false);
 
     const videoId = getYoutubeId(listening.song);
     const thumbnail = getYoutubeThumbnail(listening.song);
@@ -78,6 +87,9 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
                         setProgress(0);
                         setTitle(event.target.getVideoData().title ?? '');
                         event.target.seekTo(start, true);
+                        event.target.setVolume(volumeValueRef.current);
+                        if (volumeValueRef.current === 0) event.target.mute();
+                        else event.target.unMute();
                     },
                     onStateChange: (event) => {
                         setPlaying(event.data === YT.PlayerState.PLAYING);
@@ -137,18 +149,51 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
         setProgress((next - clipStart) / (clipEnd - clipStart));
     };
 
+    const applyVolume = (next: number) => {
+        const value = Math.round(Math.min(100, Math.max(0, next)));
+        volumeValueRef.current = value;
+        setVolume(value);
+        setMuted(value === 0);
+
+        const player = playerRef.current;
+        if (!player) return;
+        player.setVolume(value);
+        if (value === 0) player.mute();
+        else player.unMute();
+    };
+
+    const toggleMute = () => {
+        const player = playerRef.current;
+        if (!player) return;
+
+        if (muted || volume === 0) {
+            const restored = volume === 0 ? 80 : volume;
+            applyVolume(restored);
+            return;
+        }
+
+        setMuted(true);
+        player.mute();
+    };
+
+    const onVolumePointer = (event: React.PointerEvent<HTMLDivElement>) => {
+        event.currentTarget.setPointerCapture(event.pointerId);
+        applyVolume(ratioFromPointer(event) * 100);
+    };
+
+    const onVolumeMove = (event: React.PointerEvent<HTMLDivElement>) => {
+        if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
+        applyVolume(ratioFromPointer(event) * 100);
+    };
+
     const onTrackPointer = (event: React.PointerEvent<HTMLDivElement>) => {
-        const track = trackRef.current;
-        if (!track) return;
-        track.setPointerCapture(event.pointerId);
-        const rect = track.getBoundingClientRect();
-        seekToRatio((event.clientX - rect.left) / rect.width);
+        event.currentTarget.setPointerCapture(event.pointerId);
+        seekToRatio(ratioFromPointer(event));
     };
 
     const onTrackMove = (event: React.PointerEvent<HTMLDivElement>) => {
         if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
-        const rect = event.currentTarget.getBoundingClientRect();
-        seekToRatio((event.clientX - rect.left) / rect.width);
+        seekToRatio(ratioFromPointer(event));
     };
 
     const togglePlay = () => {
@@ -179,7 +224,10 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
                 {thumbnail && (
                     <img src={thumbnail} alt="" className="absolute inset-0 h-full w-full object-cover" />
                 )}
-                <div ref={boxRef} className="absolute inset-0 pointer-events-none [&>iframe]:h-full [&>iframe]:w-full" />
+                <div
+                    ref={boxRef}
+                    className="absolute inset-0 overflow-hidden pointer-events-none [&_iframe]:absolute [&_iframe]:left-1/2 [&_iframe]:top-1/2 [&_iframe]:h-full [&_iframe]:w-[177.78%] [&_iframe]:max-w-none [&_iframe]:-translate-x-1/2 [&_iframe]:-translate-y-1/2 [&_iframe]:border-0"
+                />
             </a>
 
             <div className="flex min-w-0 flex-1 flex-col gap-2">
@@ -216,8 +264,8 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
                     />
                 </div>
 
-                <div className="flex items-center justify-between text-[10px] font-ank uppercase tracking-widest text-zinc-500">
-                    <span>{formatTime(current - clipStart)}</span>
+                <div className="flex items-center gap-3 text-[10px] font-ank uppercase tracking-widest text-zinc-500">
+                    <span className="w-8">{formatTime(current - clipStart)}</span>
                     <button
                         type="button"
                         onClick={togglePlay}
@@ -236,7 +284,50 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
                             />
                         )}
                     </button>
-                    <span>{formatTime(Math.max(0, clipEnd - clipStart))}</span>
+                    <span className="w-8">{formatTime(Math.max(0, clipEnd - clipStart))}</span>
+
+                    <div className="ml-auto flex min-w-0 items-center gap-2">
+                        <button
+                            type="button"
+                            onClick={toggleMute}
+                            aria-label={muted || volume === 0 ? 'Activar sonido' : 'Silenciar'}
+                            className="flex h-7 w-7 items-center justify-center text-zinc-400 hover:text-[#d16c8a] transition-colors"
+                        >
+                            {muted || volume === 0 ? (
+                                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                    <path d="M11 5 6 9H3v6h3l5 4V5Z" />
+                                    <path d="m16 10 5 5M21 10l-5 5" />
+                                </svg>
+                            ) : (
+                                <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                    <path d="M11 5 6 9H3v6h3l5 4V5Z" />
+                                    <path d="M16 9.5a5 5 0 0 1 0 5M18.5 7a8 8 0 0 1 0 10" />
+                                </svg>
+                            )}
+                        </button>
+                        <div
+                            ref={volumeRef}
+                            role="slider"
+                            aria-label="Volumen"
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                            aria-valuenow={muted ? 0 : volume}
+                            tabIndex={0}
+                            onPointerDown={onVolumePointer}
+                            onPointerMove={onVolumeMove}
+                            className="relative h-6 w-16 cursor-pointer touch-none"
+                        >
+                            <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-zinc-700" />
+                            <div
+                                className="absolute top-1/2 h-px -translate-y-1/2 bg-[#d16c8a]"
+                                style={{ width: `${muted ? 0 : volume}%` }}
+                            />
+                            <div
+                                className="absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#d16c8a] bg-zinc-950"
+                                style={{ left: `${muted ? 0 : volume}%` }}
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

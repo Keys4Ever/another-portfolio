@@ -6,7 +6,7 @@ export const getYoutubeId = (url?: string): string | null => {
 
 export const getYoutubeThumbnail = (url?: string): string | null => {
     const id = getYoutubeId(url);
-    return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
+    return id ? `https://i.ytimg.com/vi/${id}/mqdefault.jpg` : null;
 };
 
 export type YoutubePlayer = {
@@ -17,6 +17,11 @@ export type YoutubePlayer = {
     getDuration: () => number;
     getPlayerState: () => number;
     getVideoData: () => { title?: string; video_id?: string; author?: string };
+    setVolume: (volume: number) => void;
+    getVolume: () => number;
+    mute: () => void;
+    unMute: () => void;
+    isMuted: () => boolean;
     destroy: () => void;
 };
 
