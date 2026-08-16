@@ -264,34 +264,36 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
                     />
                 </div>
 
-                <div className="ml-8 flex items-center gap-3 text-[10px] font-ank uppercase tracking-widest text-zinc-500">
-                    <span className="w-8">{formatTime(current - clipStart)}</span>
-                    <button
-                        type="button"
-                        onClick={togglePlay}
-                        aria-label={playing ? 'Pausar' : 'Reproducir'}
-                        className="flex h-7 w-7 items-center justify-center text-zinc-300 hover:text-[#d16c8a] transition-colors"
-                    >
-                        {playing ? (
-                            <span className="flex gap-[3px]" aria-hidden>
-                                <span className="h-3 w-[3px] bg-current" />
-                                <span className="h-3 w-[3px] bg-current" />
-                            </span>
-                        ) : (
-                            <span
-                                className="ml-0.5 h-0 w-0 border-y-[6px] border-y-transparent border-l-[10px] border-l-current"
-                                aria-hidden
-                            />
-                        )}
-                    </button>
-                    <span className="w-8">{formatTime(Math.max(0, clipEnd - clipStart))}</span>
-
-                    <div className="flex min-w-0 items-center gap-2">
+                <div className="grid grid-cols-[1fr_auto_1fr] items-center text-[10px] font-ank uppercase tracking-widest text-zinc-500">
+                    <div />
+                    <div className="flex items-center gap-3">
+                        <span className="w-8">{formatTime(current - clipStart)}</span>
+                        <button
+                            type="button"
+                            onClick={togglePlay}
+                            aria-label={playing ? 'Pausar' : 'Reproducir'}
+                            className="flex h-7 w-7 items-center justify-center text-zinc-300 hover:text-[#d16c8a] transition-colors"
+                        >
+                            {playing ? (
+                                <span className="flex gap-[3px]" aria-hidden>
+                                    <span className="h-3 w-[3px] bg-current" />
+                                    <span className="h-3 w-[3px] bg-current" />
+                                </span>
+                            ) : (
+                                <span
+                                    className="ml-0.5 h-0 w-0 border-y-[6px] border-y-transparent border-l-[10px] border-l-current"
+                                    aria-hidden
+                                />
+                            )}
+                        </button>
+                        <span className="w-8">{formatTime(Math.max(0, clipEnd - clipStart))}</span>
+                    </div>
+                    <div className="flex min-w-0 items-center gap-2 pl-3">
                         <button
                             type="button"
                             onClick={toggleMute}
                             aria-label={muted || volume === 0 ? 'Activar sonido' : 'Silenciar'}
-                            className="flex h-7 w-7 items-center justify-center text-zinc-400 hover:text-[#d16c8a] transition-colors"
+                            className="flex h-7 w-7 shrink-0 items-center justify-center text-zinc-400 hover:text-[#d16c8a] transition-colors"
                         >
                             {muted || volume === 0 ? (
                                 <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -315,7 +317,7 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
                             tabIndex={0}
                             onPointerDown={onVolumePointer}
                             onPointerMove={onVolumeMove}
-                            className="relative h-6 w-16 cursor-pointer touch-none"
+                            className="relative h-6 w-8 cursor-pointer touch-none"
                         >
                             <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-zinc-700" />
                             <div
