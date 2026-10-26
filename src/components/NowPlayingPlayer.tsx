@@ -22,16 +22,19 @@ const ratioFromPointer = (event: React.PointerEvent<HTMLElement>) => {
 export default function NowPlayingPlayer({ listening }: { listening: ListeningData }) {
     const boxRef = useRef<HTMLDivElement>(null);
     const playerRef = useRef<YoutubePlayer | null>(null);
+    const playerReadyRef = useRef(false);
+    const pendingPlayRef = useRef(false);
     const trackRef = useRef<HTMLDivElement>(null);
     const volumeRef = useRef<HTMLDivElement>(null);
-    const volumeValueRef = useRef(80);
+    const volumeValueRef = useRef(20);
+    const [playerRequested, setPlayerRequested] = useState(false);
     const [playing, setPlaying] = useState(false);
     const [progress, setProgress] = useState(0);
     const [clipStart, setClipStart] = useState(listening.startTime ?? 0);
     const [clipEnd, setClipEnd] = useState(listening.endTime ?? 0);
     const [current, setCurrent] = useState(listening.startTime ?? 0);
     const [title, setTitle] = useState('');
-    const [volume, setVolume] = useState(80);
+    const [volume, setVolume] = useState(20);
     const [muted, setMuted] = useState(false);
 
     const videoId = getYoutubeId(listening.song);
@@ -39,7 +42,7 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
     const sourceUrl = listening.song;
 
     useEffect(() => {
-        if (!videoId || !boxRef.current) return;
+        if (!playerRequested || !videoId || !boxRef.current) return;
 
         const box = boxRef.current;
         const host = document.createElement('div');
@@ -90,6 +93,11 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
                         event.target.setVolume(volumeValueRef.current);
                         if (volumeValueRef.current === 0) event.target.mute();
                         else event.target.unMute();
+                        playerReadyRef.current = true;
+                        if (pendingPlayRef.current) {
+                            pendingPlayRef.current = false;
+                            event.target.playVideo();
+                        }
                     },
                     onStateChange: (event) => {
                         setPlaying(event.data === YT.PlayerState.PLAYING);
@@ -106,11 +114,12 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
 
         return () => {
             cancelled = true;
+            playerReadyRef.current = false;
             playerRef.current?.destroy();
             playerRef.current = null;
             host.remove();
         };
-    }, [videoId, listening.startTime, listening.endTime]);
+    }, [playerRequested, videoId, listening.startTime, listening.endTime]);
 
     useEffect(() => {
         if (!playing) return;
@@ -198,7 +207,11 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
 
     const togglePlay = () => {
         const player = playerRef.current;
-        if (!player) return;
+        if (!player || !playerReadyRef.current) {
+            pendingPlayRef.current = true;
+            setPlayerRequested(true);
+            return;
+        }
 
         if (playing) {
             player.pauseVideo();
