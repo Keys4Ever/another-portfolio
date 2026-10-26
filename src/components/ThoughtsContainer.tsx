@@ -1,5 +1,6 @@
 import { useThoughtsData } from '../hooks/useThoughtsData';
 import NowPlayingPlayer from './NowPlayingPlayer';
+import avatar from '../assets/img/avatar.jpg'
 
 const TerminalCard = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <div className="relative overflow-hidden border border-zinc-700 bg-zinc-950 text-zinc-200 font-mono h-full">
@@ -43,7 +44,7 @@ export default function ThoughtsContainer() {
                 {thought ? (
                     <div className="flex items-start gap-3">
                         <img
-                            src={thought.userAvatarUrl || "/placeholder.svg"}
+                            src={avatar.src}
                             alt={thought.username}
                             width="40"
                             height="40"

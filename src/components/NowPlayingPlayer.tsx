@@ -42,6 +42,38 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
     const sourceUrl = listening.song;
 
     useEffect(() => {
+        if (!videoId || !sourceUrl) {
+            setTitle('Título no disponible');
+            return;
+        }
+
+        const controller = new AbortController();
+        setTitle('Cargando título…');
+
+        fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(sourceUrl)}&format=json`, {
+            signal: controller.signal,
+        })
+            .then(async (response) => {
+                if (!response.ok) {
+                    throw new Error(`YouTube oEmbed returned ${response.status}`);
+                }
+
+                const metadata: { title?: unknown } = await response.json();
+                if (typeof metadata.title !== 'string' || !metadata.title.trim()) {
+                    throw new Error('YouTube oEmbed returned no title');
+                }
+                setTitle(metadata.title);
+            })
+            .catch((error: unknown) => {
+                if (controller.signal.aborted) return;
+                console.error('No se pudo cargar el título del video de YouTube:', error);
+                setTitle('Título no disponible');
+            });
+
+        return () => controller.abort();
+    }, [videoId, sourceUrl]);
+
+    useEffect(() => {
         if (!playerRequested || !videoId || !boxRef.current) return;
 
         const box = boxRef.current;
@@ -51,7 +83,6 @@ export default function NowPlayingPlayer({ listening }: { listening: ListeningDa
 
         let cancelled = false;
         const start = listening.startTime ?? 0;
-        setTitle('');
 
         loadYoutubeApi().then((YT) => {
             if (cancelled) return;
