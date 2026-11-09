@@ -1,4 +1,5 @@
 ---
+import meimei from "../assets/img/meimei.png";
 const { title } = Astro.props;
 ---
 
@@ -19,6 +20,53 @@ const { title } = Astro.props;
 	</head>
 	<body class="min-h-screen bg-background text-foreground">
 		<slot />
+		<img
+			id="meimei"
+			src={meimei.src}
+			alt=""
+			width="128"
+			draggable="false"
+			aria-hidden="true"
+			class="pointer-events-none fixed top-0 left-0 z-40 w-32 select-none opacity-0 max-md:hidden"
+		/>
+		<script>
+			const el = document.getElementById("meimei");
+			const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+			if (el && fine) {
+				let cx = 0;
+				let cy = 0;
+				let seen = false;
+				const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+				const k = reduced ? 1 : 0.02;
+				const lag = reduced ? 0 : 190;
+				const trail = [];
+				const tick = () => {
+					const now = performance.now();
+					while (trail.length > 1 && now - trail[0].t >= lag) trail.shift();
+					const target = trail[0];
+					if (target) {
+						cx += (target.x - cx) * k;
+						cy += (target.y - cy) * k;
+						el.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -78%)`;
+					}
+					requestAnimationFrame(tick);
+				};
+				addEventListener(
+					"pointermove",
+					(e) => {
+						trail.push({ t: performance.now(), x: e.clientX, y: e.clientY });
+						if (!seen) {
+							cx = e.clientX;
+							cy = e.clientY;
+							seen = true;
+							el.style.opacity = "1";
+							requestAnimationFrame(tick);
+						}
+					},
+					{ passive: true },
+				);
+			}
+		</script>
 	</body>
 </html>
 
